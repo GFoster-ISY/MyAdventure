@@ -18,10 +18,9 @@ class Dirn(Enum):
         return (x-1,y)
 
 class Map:
-  def __init__(self, width, height, player):
+  def __init__(self, width, height):
     self.width = width
     self.height = height
-    self.character = player
     self.error = ""
     self.map = []
     self.lookup = []
@@ -47,7 +46,7 @@ class Map:
     clear()
     for y in range(self.height):
       for x in range(self.width):
-        if (self.character.x == x and self.character.y == y):
+        if (hasattr(self,'character') and self.character.x == x and self.character.y == y):
           print(self.character.figure, end="")
         else:
           print(self.map[x][y], end="")
