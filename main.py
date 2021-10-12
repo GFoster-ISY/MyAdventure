@@ -35,9 +35,18 @@ c4.addToMap(level)
 c5 = Corridor([ [19,14], [19,17], [27,17], [27,14] ])
 c5.addToMap(level)
 
-player = Character(2,21)
+player = Character(2,21,startEnergy=500)
 player.addToMap(level)
 player.draw()
+player.addToInventory("Food",5)
+player.addToInventory("Gold",25)
+player.addToInventory("First Aid kit",1)
+# player.listInventory()
+# player.removeFromInventory("Food",5)
+# player.listInventory()
+# player.addToInventory("Food",5)
+# player.listInventory()
+
 #level.draw()
 
 while True:
@@ -53,5 +62,11 @@ while True:
     player.move(Dirn.WEST)
   if command == "O":
     level.openDoor()
+  if command == "P":
+    player.pickupItem()
+  if command == "U":
+    player.useItem()
+  if command == "I":
+    player.listInventory()
 
   player.draw()

@@ -1,17 +1,73 @@
 from map import Dirn
-from utility import clear
+from utility import clear, getch
 
 class Character:
-  def __init__(self, startx, starty):
+  def __init__(self, startx, starty, startHealth=100, startMaxHealth=100, startEnergy=1000, startMaxEnergy=1000):
     self.x = startx
     self.y = starty
     self.figure = "C"
     self.inRoom = True
-    self.health = 100
-    self.energy = 1000
+    self.maxHealth = startMaxHealth;
+    self.maxEnergy = startMaxEnergy;
+    self.setHealth(startHealth)
+    self.setEnergy(startEnergy)
     self.map = []
     self.error = ""
     self.level = ""
+    self.inventory = {}
+
+  def setHealth(self, newHealth):
+    if (newHealth > self.maxHealth):
+      newHealth = self.maxHealth
+    self.health = newHealth;
+
+  def setEnergy(self, newEnergy):
+    if (newEnergy > self.maxEnergy):
+      newEnergy = self.maxEnergy
+    self.energy = newEnergy
+  
+  def addToInventory(self,item, amount):
+    if (item in self.inventory):
+      self.inventory[item] += amount
+    else:
+      self.inventory[item] = amount
+
+  def removeFromInventory(self, item, amount):
+    if (item in self.inventory):
+      if self.inventory[item] > amount:
+        self.inventory[item] -= amount
+      else:
+        self.inventory.pop(item)
+
+  def listInventory(self):
+    clear()
+    if self.inventory == {}:
+      print("You are carrying nothing")
+    else:
+      print("You are carrying:")
+      for item in self.inventory:
+        print(f"{item}: {self.inventory[item]}")
+    print("Press any key to continue")
+    getch()
+
+  def pickupItem(self):
+    None
+
+  def useItem(self):
+    clear()
+    print("Which item would you like to use?")
+    index = 1
+    for item in self.inventory:
+      print(f"{index}: {item} -> {self.inventory[item]}")
+      index += 1
+    print("Select a number.")
+    itemIndex = int(getch())
+    if (itemIndex < index):
+      item = list(self.inventory.keys())[itemIndex-1]
+      print(f"You used {item}")
+    self.removeFromInventory(item,1)
+    print("Press any key to continue")
+    getch()
 
   def addToMap(self, level):
     self.level = level
@@ -27,9 +83,10 @@ class Character:
     if (self.inRoom):
       where = self.level.getPlace()
       roomName = where.name
-      print (f"Health: {self.health}  Energy: {self.energy} You are in the {roomName}")
+      roomDetails = f" You are in the {roomName}"
     else:
-      print (f"Health: {self.health}  Energy: {self.energy}")
+      roomDetails = ""
+    print (f"Health: {self.health}/{self.maxHealth}  Energy: {self.energy}/{self.maxEnergy} {roomDetails}")
     for y in range(len(self.map[0])):
       for x in range(len(self.map)):
         if (self.x == x and self.y == y):
