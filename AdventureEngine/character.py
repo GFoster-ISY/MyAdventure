@@ -21,10 +21,16 @@ class Character:
       newHealth = self.maxHealth
     self.health = newHealth;
 
+  def addToHealth(self, total):
+    self.setHealth(self.health+total)
+
   def setEnergy(self, newEnergy):
     if (newEnergy > self.maxEnergy):
       newEnergy = self.maxEnergy
     self.energy = newEnergy
+
+  def addToEnergy(self, total):
+    self.setEnergy(self.energy+total)
   
   def addToInventory(self,item, amount):
     if (item in self.inventory):
@@ -51,7 +57,11 @@ class Character:
     getch()
 
   def pickupItem(self):
-    None
+    where = map.getPlace()
+    item = where.getItem(self)
+    if (item != None):
+      self.addToInventory(item.name, item.amount)
+    
 
   def useItem(self):
     clear()
@@ -72,9 +82,11 @@ class Character:
   def addToMap(self, level):
     self.level = level
     level.character = self
+    # Create an empty map for the character
     self.map = []
     for i in range(level.width):
       self.map.append([" "] * level.height)
+    # now add the room the character is in to the their map
     where = level.getPlace()
     where.addToMap(self)
 
@@ -105,7 +117,12 @@ class Character:
     if ahead == "":
       self.error = "You have reached the edge of the world"
     elif ahead == " " and self.inRoom:
-      (self.x,self.y) = Dirn.newCoord(dirn,self.x, self.y)
+      where = self.level.getPlace()
+      (newx,newy) = Dirn.newCoord(dirn, self.x, self.y)
+      item = where.lookItem(newx,newy)
+      if item != None:
+        self.error = f"You have found on the floor {item}"
+      (self.x, self.y) = (newx,newy)
     elif ahead == " " and not self.inRoom:
       self.error = "Ouch you hit a wall."
       self.health -= 2
@@ -127,4 +144,5 @@ class Character:
         if where != "":
           where.addToMap(self, newx, newy)
       self.inRoom = False;
+
     self.energy -= 1

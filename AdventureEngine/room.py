@@ -13,6 +13,7 @@ class Room:
     self.offsety = offsety
     self.door = []
     self.doorOpen = []
+    self.items = {}
 
   def __repr__(self):
     text = f"Object Room\n   Width : {self.width}\n   Height: {self.height}\n   Doors : {self.door}\n"
@@ -24,6 +25,26 @@ class Room:
   def localToGlobal (self, lx, ly):
     return (lx+self.offsetx, ly+self.offsety)
 
+  def addItem(self, level, item):
+    (itemx, itemy) = self.globalToLocal(item.x, item.y)
+    self.items[(itemx, itemy)] = item
+    #self.addItemsToMap(level)
+
+  def lookItem(self, x, y):
+    (itemx, itemy) = self.globalToLocal(x,y)
+    coords = (itemx, itemy)
+    if (coords in self.items):
+      item = self.items[coords]
+      return item
+    else:
+      return None
+
+  def getItem(self, player):
+    (itemx, itemy) = self.globalToLocal(player.x, player.y)
+    item = self.lookItem(itemx,itemy)
+    if item != None:
+      del self.items[(itemx, itemy)]
+    return item
 
   def addDoor(self, side, count):
     if side == Dirn.NORTH:
@@ -84,5 +105,12 @@ class Room:
         level.placeOnMap(self,charGx,charGy,"▒")
       else:
         level.placeOnMap(self,charGx,charGy,"*")
+    self.addItemsToMap(level)
 
+  def addItemsToMap(self, level):
+    for kv in self.items.items():
+      coords = kv[0]
+      (itemGx, itemGy) = self.localToGlobal(coords[0],coords[1]) 
+      item = kv[1]
+      level.placeOnMap(item,itemGx, itemGy, item.figure)
   

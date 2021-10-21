@@ -33,6 +33,11 @@ class Map:
     self.map[x][y] = char
     self.lookup[x][y] = object
 
+  def getLocation(self, x, y):
+    if (x == -1):
+      return self.getPlace()
+    return self.lookup[x][y]
+  
   def getPlace(self):
     return self.lookup[self.character.x][self.character.y]
 
@@ -54,23 +59,45 @@ class Map:
     print(self.error)
     self.error = ""
   
-  def moveTo(self, dirn, x, y):
+  def ahead(self, dirn, x, y):
     if dirn == Dirn.NORTH:
       if y-1 < 0:
-        return ""
-      return self.map[x][y-1]
+        return (x,y)
+      return (x,y-1)
     if dirn == Dirn.EAST:
       if x+1 >= self.width:
-        return ""
-      return self.map[x+1][y]
+        return (x,y)
+      return (x+1,y)
     if dirn == Dirn.SOUTH:
       if y+1 >= self.height:
-        return ""
-      return self.map[x][y+1]
+        return (x,y)
+      return (x,y+1)
     if dirn == Dirn.WEST:
       if x-1 < 0:
-        return ""
-      return self.map[x-1][y]
+        return (x,y)
+      return (x-1,y)
+
+  def moveTo(self, dirn, x, y):
+    coords = self.ahead(dirn, x, y)
+    if coords == (x,y):
+      return ""
+    return self.map[coords[0]][coords[1]]
+    # if dirn == Dirn.NORTH:
+    #   if y-1 < 0:
+    #     return ""
+    #   return self.map[x][y-1]
+    # if dirn == Dirn.EAST:
+    #   if x+1 >= self.width:
+    #     return ""
+    #   return self.map[x+1][y]
+    # if dirn == Dirn.SOUTH:
+    #   if y+1 >= self.height:
+    #     return ""
+    #   return self.map[x][y+1]
+    # if dirn == Dirn.WEST:
+    #   if x-1 < 0:
+    #     return ""
+    #   return self.map[x-1][y]
 
   def openDoor(self):
     x = self.character.x
