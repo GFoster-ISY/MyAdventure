@@ -41,7 +41,7 @@ class Room:
 
   def getItem(self, player):
     (itemx, itemy) = self.globalToLocal(player.x, player.y)
-    item = self.lookItem(itemx,itemy)
+    item = self.lookItem(player.x, player.y)
     if item != None:
       del self.items[(itemx, itemy)]
     return item

@@ -11,16 +11,16 @@ class Item:
     
   def __str__(self):
     if self.amount == 1:
-      return "a " + self.name
+      return f"a {self.name}"
     else:
-      return self.amount + " " + self.name
+      return f"{self.amount} {self.name}"
   
   def addToMap(self, map):
     where = map.getLocation(self.x, self.y)
     where.addItem(map, self)
 
   @abstractmethod
-  def use(map, player):
+  def use(self, map, player):
     pass
   
   # def drop(self, map, player):
@@ -33,7 +33,7 @@ class Food(Item):
     self.name = "Food"
     self.figure = "F";
 
-  def use(map, player):
+  def use(self, map, player):
     player.addToEnergy(100)
 
 class FirstAid(Item):
@@ -42,5 +42,5 @@ class FirstAid(Item):
     self.name = "First Aid Kit"
     self.figure = "+";
     
-  def use(map, player):
+  def use(self, map, player):
     player.addToHealth(50)

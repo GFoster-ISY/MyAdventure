@@ -32,18 +32,21 @@ class Character:
   def addToEnergy(self, total):
     self.setEnergy(self.energy+total)
   
-  def addToInventory(self,item, amount):
-    if (item in self.inventory):
-      self.inventory[item] += amount
+  def addToInventory(self,item):
+    if (item.name in self.inventory):
+      self.inventory[item.name].amount+=item.amount
     else:
-      self.inventory[item] = amount
+      self.inventory[item.name] = item
 
   def removeFromInventory(self, item, amount):
+    object = None
     if (item in self.inventory):
-      if self.inventory[item] > amount:
-        self.inventory[item] -= amount
+      object = self.inventory[item]
+      if self.inventory[item].amount > amount:
+        self.inventory[item].amount -= amount
       else:
         self.inventory.pop(item)
+    return object
 
   def listInventory(self):
     clear()
@@ -52,15 +55,15 @@ class Character:
     else:
       print("You are carrying:")
       for item in self.inventory:
-        print(f"{item}: {self.inventory[item]}")
+        print(self.inventory[item])
     print("Press any key to continue")
     getch()
 
   def pickupItem(self):
-    where = map.getPlace()
+    where = self.level.getPlace()
     item = where.getItem(self)
     if (item != None):
-      self.addToInventory(item.name, item.amount)
+      self.addToInventory(item)
     
 
   def useItem(self):
@@ -75,7 +78,9 @@ class Character:
     if (itemIndex < index):
       item = list(self.inventory.keys())[itemIndex-1]
       print(f"You used {item}")
-    self.removeFromInventory(item,1)
+    object = self.removeFromInventory(item,1)
+    if object != None:
+      object.use(self.level, self)
     print("Press any key to continue")
     getch()
 
