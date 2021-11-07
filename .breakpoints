@@ -2,10 +2,18 @@
   "files": {
     "AdventureEngine/character.py": [
       {
-        "id": "db21fd72-2adb-44b6-a779-8dcb89e0c660",
-        "line": 23,
-        "version": 2479,
-        "index": 625
+        "id": "3f289b1b-f792-4722-bfd0-6265dc457850",
+        "line": 67,
+        "version": 2796,
+        "index": 1752
+      }
+    ],
+    "AdventureEngine/item.py": [
+      {
+        "id": "708c7336-158a-4323-8346-e456e6b8de93",
+        "line": 70,
+        "version": 1351,
+        "index": 1871
       }
     ]
   }

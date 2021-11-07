@@ -3,6 +3,7 @@ from utility import clear, getch
 
 class Character:
   def __init__(self, startx, starty, startHealth=100, startMaxHealth=100, startEnergy=1000, startMaxEnergy=1000):
+    self.finished = False;
     self.x = startx
     self.y = starty
     self.figure = "C"
@@ -34,12 +35,13 @@ class Character:
   
   def addToInventory(self,item):
     if (item.name in self.inventory):
-      self.inventory[item.name].amount+=item.amount
+      self.inventory[item.name].amount += item.amount
     else:
+      item.x = -1
+      item.y = -1
       self.inventory[item.name] = item
 
   def removeFromInventory(self, item, amount):
-    object = None
     if (item in self.inventory):
       object = self.inventory[item]
       if self.inventory[item].amount > amount:
@@ -48,6 +50,7 @@ class Character:
         self.inventory.pop(item)
     return object
 
+  
   def listInventory(self):
     clear()
     if self.inventory == {}:
@@ -62,7 +65,8 @@ class Character:
   def pickupItem(self):
     where = self.level.getPlace()
     item = where.getItem(self)
-    if (item != None):
+    if (item != None and item.canCarry):
+      self.map[item.x][item.y] = ' '
       self.addToInventory(item)
     
 

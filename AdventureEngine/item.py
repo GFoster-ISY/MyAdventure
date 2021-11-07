@@ -44,3 +44,30 @@ class FirstAid(Item):
     
   def use(self, map, player):
     player.addToHealth(50)
+
+class Chest(Item):
+  def __init__(self, amount, startx=-1, starty=-1, portable=False):
+    Item.__init__(self, amount, startx, starty, portable)
+    self.name = "Locked Chest"
+    self.figure = "■";
+    self.locked = True
+    
+  def use(self, map, player):
+    if not self.locked:
+      print ("You found the Orb of eternal life.")
+      player.finished = True
+
+class Key(Item):
+  def __init__(self, amount, startx=-1, starty=-1, opens=None, portable=True):
+    Item.__init__(self, amount, startx, starty, portable)
+    self.opens = opens;
+    self.name = "Key"
+    self.figure = "∞";
+    
+  def use(self, map, player):
+    where = player.level.getPlace()
+    item = where.getItem(player)
+    if item != None and item == self.opens:
+      item.locked = False
+      print ("You unlocked the chest")
+      item.use(map, player)

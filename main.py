@@ -3,7 +3,7 @@ sys.path.insert(1, 'AdventureEngine')
 from utility import getch
 from character import Character
 from room import Room
-from item import Food, FirstAid
+from item import Food, FirstAid, Chest, Key
 from corridor import Corridor
 from map import Map, Dirn
 
@@ -36,14 +36,20 @@ c4.addToMap(level)
 c5 = Corridor([ [19,14], [19,17], [27,17], [27,14] ])
 c5.addToMap(level)
 
-item1 = Food(1,5,19)
+item1 = Food(3,5,19)
 item1.addToMap(level)
+item2 = Chest(1,4,19)
+item2.addToMap(level)
+item3 = Key(1,2,18)
+item3.addToMap(level)
+item4 = Key(1,2,15,item2)
+item4.addToMap(level)
 
 player = Character(2,21,startEnergy=500)
 player.addToMap(level)
 player.draw()
-player.addToInventory(Food(5))
-# player.addToInventory("Gold",25)
+#player.addToInventory(Food(5))
+#player.addToInventory("Gold",25)
 player.addToInventory(FirstAid(1))
 
 # player.listInventory()
@@ -73,5 +79,15 @@ while True:
     player.useItem()
   if command == "I":
     player.listInventory()
+
+  if player.energy == 0:
+    print ("You died of exhaustion")
+    break
+  if player.health == 0:
+    print ("You died of bloodloss")
+    break
+  if player.finished:
+    print ("Congratulations you win.")
+    break
 
   player.draw()
